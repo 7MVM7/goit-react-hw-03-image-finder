@@ -1,16 +1,13 @@
 import React, { Component } from "react";
 import { toast } from "react-toastify";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import SearchBar from "./Components/SearchBar/SearchBar";
 import ImageGallery from "./Components/ImageGallery/ImageGallery";
 import Api from "./Components/Services/apiServices";
 import Loader from "./Components/Loader/Loader";
 import Modal from "./Components/Modal/Modal";
 import Button from "./Components/Button/Button";
-
-// function App() {
-//   return <div className="App"></div>;
-// }
 
 class App extends Component {
   state = {
@@ -23,7 +20,22 @@ class App extends Component {
     page: 1,
   };
 
-  componentDidUpdate(_, prevState) {
+  // componentDidUpdate(_prevProps, prevState) {
+  //   const prevSearchQuery = prevState.query;
+  //   const nextSearchQuery = this.state.query;
+  //   if (prevSearchQuery !== nextSearchQuery) {
+  //     this.fetchImages();
+  //   }
+
+  //   if (prevState.page !== this.state.page && this.state.page !== 2) {
+  //     window.scrollTo({
+  //       top: document.documentElement.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }
+
+  componentDidUpdate(_prevProps, prevState) {
     if (prevState.query !== this.state.query) {
       this.fetchImages();
     }
@@ -35,19 +47,17 @@ class App extends Component {
     }
   }
 
-  fetchImages = () => {
-    const { query, page } = this.state;
-    this.setState({ loading: true });
-    Api.getPictures({ query, page })
-      .then((hits) => {
-        this.setState((prevState) => ({
-          images: [...prevState.images, ...hits],
-          page: prevState.page + 1,
-        }));
-      })
-      .catch((_error) => this.setState({ error: true }))
-      .finally(() => this.setState({ loading: false }));
-  };
+  // componentDidUpdate(_, prevState) {
+  //   if (prevState.query !== this.state.query) {
+  //     this.fetchImages();
+  //   }
+  //   if (this.state.page !== 2 && prevState.page !== this.state.page) {
+  //     window.scrollTo({
+  //       top: document.documentElement.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({
@@ -60,29 +70,36 @@ class App extends Component {
     this.toggleModal();
   };
 
-  handlChangeQuery = (e) => {
-    this.setState({
-      [e.currentTarget.name]: e.currentTarget.value,
-    });
-    // console.log(e.currentTarget.value);
+  handleSubmit = (Squery) => {
+    this.setState({ images: [], query: Squery, page: 1 });
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    Api.getPictures(this.state.query, 1).then((response) =>
-      this.setState({ images: response })
-    );
+  fetchImages = () => {
+    const { query, page } = this.state;
+    this.setState({ loading: true });
+    Api.getPictures({ query, page })
+      .then((hits) => {
+        this.setState((prevState) => ({
+          images: [...prevState.images, ...hits],
+          page: prevState.page + 1,
+        }));
+      })
+      .then(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
+      })
+      .catch((_error) => this.setState({ error: true }))
+      .finally(() => this.setState({ loading: false }));
   };
+
   render() {
     const { selectedImage, showModal, loading, images, error } = this.state;
     return (
       <div>
         {error && toast.error("OOO, something is wrong!")}
-        <SearchBar
-          query={this.state.query}
-          handleChange={this.handlChangeQuery}
-          onSubmit={this.handleSubmit}
-        />
+        <SearchBar onSubmit={this.handleSubmit} />
         <ImageGallery
           images={this.state.images}
           onSelect={this.handleSelectImage}
@@ -94,21 +111,10 @@ class App extends Component {
         {showModal && (
           <Modal onClose={this.toggleModal} largeImageURL={selectedImage} />
         )}
+        <ToastContainer position="bottom-right" autoClose={3000} />
       </div>
     );
   }
 }
-//   handlChengeQuery = (e) => {
-//     this.setState({
-//       [e.currentTarget.name]: e.currentTarget.value,
-//     });
-//   };
-
-//   handleSubmit = (e) => {
-//     e.preveventDefault();
-//     getPictures(this.state.query, 1).them((response) =>
-//       this.setState({ Image: response })
-//     );
-//   };
 
 export default App;

@@ -1,14 +1,15 @@
 import React from "react";
-// import PropTypes from "prop-types";
-import ImageGelleryItem from "../ImageGalleryItem/ImageGalleryItem";
+import PropTypes from "prop-types";
+import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 
-function ImageGellery({ images, onSelect }) {
+
+function ImageGallery({ images, onSelect })  {
   return (
     <ul className="ImageGallery">
-      {images.map((image, webformatURL, largeImageURL, tags, _id) => (
-        <ImageGelleryItem
-          image={image}
-          key={image.id}
+      {images.map(({  webformatURL, largeImageURL, tags, id}) => (
+        <ImageGalleryItem
+          // image={image}
+          key={id}
           webformatURL={webformatURL}
           largeImageURL={largeImageURL}
           alt={tags}
@@ -17,10 +18,12 @@ function ImageGellery({ images, onSelect }) {
       ))}
     </ul>
   );
-}
-export default ImageGellery;
+};
 
-// ImageGallery.propTypes = {
-//   images: PropTypes.array.isRequired,
-//   onSelect: PropTypes.func.isRequired,
-// };
+
+ImageGallery.propTypes = {
+  images: PropTypes.array.isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
+
+export default ImageGallery;

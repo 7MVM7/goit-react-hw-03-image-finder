@@ -1,4 +1,6 @@
+import React from "react";
 import MyLoader from "react-loader-spinner";
+
 function Loader () {
  
     return (
@@ -13,3 +15,5 @@ function Loader () {
   }
 
 export  default Loader;  
+
+
