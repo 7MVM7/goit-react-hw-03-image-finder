@@ -39,12 +39,12 @@ class App extends Component {
     if (prevState.query !== this.state.query) {
       this.fetchImages();
     }
-    if (this.state.page !== 2 && prevState.page !== this.state.page) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      });
-    }
+    // if (this.state.page !== 2 && prevState.page !== this.state.page) {
+    //   window.scrollTo({
+    //     top: document.documentElement.scrollHeight,
+    //     behavior: "smooth",
+    //   });
+    // }
   }
 
   // componentDidUpdate(_, prevState) {
